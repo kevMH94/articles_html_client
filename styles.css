@@ -1,0 +1,70 @@
+body{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color: rgba(236, 233, 233, 0.89);
+    
+}
+
+h1{
+    padding-top:2%;
+    padding-bottom:2%;
+    margin: auto;
+
+}
+
+nav{
+    padding-left: 3%;
+    padding-right: 3%;
+    padding-top: 1%;
+    padding-bottom:1%;
+    justify-content: center;
+    margin:auto;
+    background-color: orange;
+   
+}
+
+#articles, form{
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: auto;
+    float:center;
+    align-content: center;
+    width:60%;
+    background-color: orange;
+
+  
+
+}
+button {
+    background-color: black;
+    color: white;
+    margin:2px;
+    padding: 7px;
+    border-radius: 10px;
+}
+
+#articles h3 {
+    margin: auto;
+}
+
+.moreButtonClass, .deleteButtonClass, .lessButtonClass{
+    width:14%;
+    margin: auto;
+}
+
+.moreButtonClass{
+    margin-bottom:3%;
+}
+
+#publishedList{
+    width: 30%;
+    margin: auto;
+}
+
+#welcomeText{
+    padding-top:30%;
+    padding-bottom:30%;
+    font-size: 2.5em;
+}

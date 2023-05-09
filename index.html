@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>The Article DB</title>
+    <link rel="stylesheet" type="text/css" href="styles.css" />
+</head>
+<body onload="loadData()">
+    <h1> The Article Database</h1>
+    <nav>
+        <button onclick="loadData('all')">View All Articles</button>
+        <button onclick="loadData('published')">View Published Articles</button>
+        <button onclick="loadData('notPublished')">View Non-Published Articles</button>
+        <button onclick="loadData('newArticle')">Add New Article</button>
+    </nav>
+    <br></br>
+    <br></br>
+    <div id="articles">
+
+        <h3 id="welcomeText"> Welcome to The Article Database</h3>
+        
+    </div>
+    <script>
+        async function loadData(area){
+            var url = "http://localhost:4000/articles/"
+            var response = await fetch(url, {headers: {'Accept': 'application/json'}})
+            var data = (await response.json())
+            var dataContents =''
+        
+
+            //List of all the articles
+            if(area == 'all'){
+
+                for (var i =0; i< data.length; i++){
+                    dataContents += "<h3><b>Title:</b> " + data[i]['title'] +"</h3> " +
+                                "<button class='moreButtonClass' id='moreButton"+data[i]['id']+"' style='visibility: visible;' onclick='showContents("+data[i]['id']+ ")'> More </button>"+
+                                 
+                                "<div id='"+data[i]['id']+"Content'  style='display: none;' >" + 
+                                    "<h3>First Uploaded: " + data[i]['created_at'].substr(0, 10)+ "<h3>"+"<br> </br>"+
+                                    "Article" + data[i]['body']+
+                                "</div>"
+                                + "<button class='deleteButtonClass' id='deleteButton' style='visibility: visible;'>Delete</button>"
+                                + "<br></br>"
+                                +"<button class='lessButtonClass' id='lessButton"+data[i]['id']+"' style='visibility: hidden;' onclick='hideContents("+data[i]['id']+ ")'> Less </button>" +
+                                    "<br></br> "
+                        
+
+
+                    
+                }
+
+                document.getElementById('articles').innerHTML = dataContents
+                
+            }
+            //List of published articles
+            else if(area == 'published'){
+                for (var i =0; i< data.length; i++){
+                    if(data[i]['published']){
+                    dataContents += "<div id='publishedList'><p><b>Title:</b> " + data[i]['title'] +  "</p>"
+                                    + "<p><b>Created on: </b> " +data[i]['created_at'].substr(0, 10)
+                                    + "</p></div><br></br>"
+                    }
+                }
+
+                document.getElementById('articles').innerHTML = dataContents
+                
+                return dataContents;
+                
+            }
+            //List of non-published articles
+            else if(area == 'notPublished'){
+                for (var i =0; i< data.length; i++){
+                    if(!data[i]['published']){
+                        dataContents += "<div id='publishedList'<p><b>Title:</b> " + data[i]['title'] +  "</p>"
+                                    + "<p><b>Created on: </b> " +data[i]['created_at'].substr(0, 10)
+                                    + "</p></div><br></br>"
+                    }
+                }
+
+                document.getElementById('articles').innerHTML = dataContents
+                
+                return dataContents;
+                
+            }
+            //create new article form
+            else if(area == 'newArticle'){
+
+                dataContents+='<form><label for="title">Title:</label><br><br><input type="text" id="article_title" name="title"><br></br><label for="body">Body:</label><br><br>'
+                +'<textarea type="text" id="article_body" name="body" rows="5"></textarea>'
+                +'<br></br><label for="published">Published:</label>'
+                +'<input type="checkbox" value ="1" id="article_published" name="published">'
+                +'<br></br>'
+
+                +'<button type="submit" onclick="create()" value="Submit">Submit</button></form>'
+
+                document.getElementById('articles').innerHTML = dataContents
+                
+                return dataContents;
+            }
+            
+        
+        }
+
+        function showContents(id){
+                document.getElementById(id+"Content").style.display="block";
+                document.getElementById("moreButton"+id).style.visibility="hidden";
+                document.getElementById("lessButton"+id).style.visibility="visible";
+                document.getElementById("deleteButton"+id).style.visibility="visible";
+                
+
+            }
+
+        function hideContents(id){
+            document.getElementById(id+"Content").style.display="none";
+            document.getElementById("moreButton"+id).style.visibility="visible";
+            document.getElementById("lessButton"+id).style.visibility="hidden";
+
+        }
+
+        async function create(){
+            var url = "http://localhost:4000/articles"
+            var input_title = document.getElementById("article_title").value
+            var input_body = document.getElementById("article_body").value
+            var input_published = document.getElementById("article_published").value
+
+            var createData = {
+                title: input_title,
+                body: input_body,
+                published: input_published
+            }
+            console.log(createData)
+
+            var response = await post (url, {
+                method: 'POST',
+                body: JSON.stringify(createData),
+                headers:{
+                    'Content-Type': "application/json",
+                    "Accept": 'application/json'
+                }
+            })
+
+            var result = await response.json()
+            console.log(result)
+
+           
+        }
+
+
+
+
+    </script>
+
+</body>
+</html>
